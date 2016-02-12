@@ -1,0 +1,109 @@
+package Maze;
+
+import java.util.*;
+import java.io.*;
+
+/**
+ * Generate maze
+ */
+public class Maze {
+
+    private int size;
+    Cell[][] maze;
+    int visitedCount;
+
+    public Maze(int size){
+        this.size = size;
+        maze = new Cell[size][size];
+        visitedCount = 0;
+    }
+
+    public void init(){
+        //initialize all cells in the maze as unvisited and unblocked
+        for(int i = 0; i < size; i++){
+            for(int j = 0; j < size; j++){
+                maze[i][j] = new Cell(i, j, size);
+            }
+        }
+        //generate a random starting cell
+        Random rand = new Random();
+        int startRow = rand.nextInt(size);
+        int startCol = rand.nextInt(size);
+
+        Cell startCell = maze[startRow][startCol];
+        dfs(startCell);
+        printMaze();
+    }
+
+    //use dfs to build maze
+    private void dfs(Cell startCell){
+        Stack<Cell> stack = new Stack<>();
+        stack.push(startCell);
+        startCell.setVisited(true);
+        Random rand = new Random();
+        while(!stack.empty()){
+            Cell curr = stack.pop();
+            if(rand.nextDouble() < 0.3) {
+                curr.setBlocked(true);
+            }
+
+            Cell[] neighbours = findNextUnvisited(curr);
+            for(int i = 0; i < 4; i++){
+                  if(neighbours[i] != null && !neighbours[i].isVisited()){
+                      neighbours[i].setVisited(true);
+                      visitedCount++;
+                      stack.push(neighbours[i]);
+                  }
+            }
+        }
+        System.out.println("Cells visited: " + visitedCount);
+    }
+
+    //find the list of unvisited adjacent cells, return empty list if reached dead end
+    private Cell[] findNextUnvisited(Cell curr){
+        Cell[] toReturn = new Cell[4];
+        Cell toAdd = null;
+        int row = curr.getRow();
+        int col = curr.getColumn();
+        for(int i = 0; i < 4; i++){
+            if(curr.getAdj()[i] != null){
+                switch(i){
+                    case 0: toAdd = maze[row - 1][col];
+                            break;
+                    case 1: toAdd = maze[row][col + 1];
+                            break;
+                    case 2: toAdd = maze[row + 1][col];
+                            break;
+                    case 3: toAdd = maze[row][col - 1];
+                            break;
+                }
+            }
+            if(toAdd != null && !toAdd.isVisited()){
+               toReturn[i] = toAdd;
+            }
+        }
+        return toReturn;
+    }
+
+    //output the maze to text file
+    private void printMaze(){
+        try {
+            File output = new File("Maze.txt");
+            PrintWriter writer = new PrintWriter(output);
+            for(int i = 0; i < size; i++){
+                for(int j = 0; j < size; j++){
+                    if(maze[i][j].isBlocked()) {
+                        writer.print(1);
+                    } else {
+                        writer.print(0);
+                    }
+                }
+                writer.println();
+            }
+            writer.close();
+        } catch (FileNotFoundException e) {
+
+        }
+
+    }
+}
