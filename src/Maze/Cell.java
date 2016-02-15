@@ -11,6 +11,7 @@ public class Cell {
     private boolean blocked;
     private Boolean[] adj;//list of status of adjacent cells starting with north and goes clockwise. null if not exist
     private Cell priv;//previous cell in the path
+    private int f;
 
     public Cell(int row, int column, int size){
         this.row = row;
@@ -71,5 +72,9 @@ public class Cell {
 
     public void setPriv(Cell priv){
         this.priv = priv;
+    }
+
+    public int getFValue(){
+        return f;
     }
 }

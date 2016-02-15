@@ -4,13 +4,13 @@ import java.util.*;
 import java.io.*;
 
 /**
- * Generate maze
+ * Generate random maze
  */
 public class Maze {
 
     private int size;
-    Cell[][] maze;
-    int visitedCount;
+    private Cell[][] maze;
+    private int visitedCount;
 
     public Maze(int size){
         this.size = size;
@@ -25,14 +25,18 @@ public class Maze {
                 maze[i][j] = new Cell(i, j, size);
             }
         }
-        //generate a random starting cell
+
+        Cell startCell = randGen();
+        dfs(startCell);
+        printMaze();
+    }
+
+    //generate a random cell
+    public Cell randGen(){
         Random rand = new Random();
         int startRow = rand.nextInt(size);
         int startCol = rand.nextInt(size);
-
-        Cell startCell = maze[startRow][startCol];
-        dfs(startCell);
-        printMaze();
+        return maze[startRow][startCol];
     }
 
     //use dfs to build maze
@@ -56,7 +60,17 @@ public class Maze {
                   }
             }
         }
-        System.out.println("Cells visited: " + visitedCount);
+
+        //if there remains unvisited nodes, choose an unvisited node and repeat dfs
+        if(visitedCount != size * size - 1){
+            for(int i = 0; i < size; i++){
+                for(int j = 0; j < size; j++){
+                    if(!maze[i][j].isVisited()){
+                        dfs(maze[i][j]);
+                    }
+                }
+            }
+        }
     }
 
     //find the list of unvisited adjacent cells, return empty list if reached dead end
@@ -102,8 +116,11 @@ public class Maze {
             }
             writer.close();
         } catch (FileNotFoundException e) {
-
+            System.out.println("File not found.");
         }
+    }
 
+    public Cell[][] getMaze(){
+        return maze;
     }
 }
