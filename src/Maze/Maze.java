@@ -28,7 +28,7 @@ public class Maze {
 
         Cell startCell = randGen();
         dfs(startCell);
-        printMaze();
+        printMaze("Maze.txt");
     }
 
     //generate a random cell
@@ -37,6 +37,19 @@ public class Maze {
         int startRow = rand.nextInt(size);
         int startCol = rand.nextInt(size);
         return maze[startRow][startCol];
+    }
+
+    public Cell[] genStartGoal(){
+        Cell startCell = randGen();
+        Cell goalCell = randGen();
+        while(startCell.isBlocked()){
+            startCell = randGen();
+        }
+        while(goalCell.isBlocked() || goalCell.equals(startCell)){
+            goalCell = randGen();
+        }
+        Cell[] cells = {startCell, goalCell};
+        return cells;
     }
 
     //use dfs to build maze
@@ -100,14 +113,16 @@ public class Maze {
     }
 
     //output the maze to text file
-    private void printMaze(){
+    public void printMaze(String filename){
         try {
-            File output = new File("Maze.txt");
+            File output = new File(filename);
             PrintWriter writer = new PrintWriter(output);
             for(int i = 0; i < size; i++){
                 for(int j = 0; j < size; j++){
                     if(maze[i][j].isBlocked()) {
                         writer.print(1);
+                    } else if(maze[i][j].isOnPath()){
+                        writer.print("*");
                     } else {
                         writer.print(0);
                     }
