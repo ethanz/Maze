@@ -9,7 +9,6 @@ public class Cell {
     private int column;
     private boolean visited;
     private boolean blocked;
-    private boolean expanded;
     private Boolean[] adj;//list of status of adjacent cells starting with north and goes clockwise. null if not exist
     private Cell priv;//previous cell in the path
     private int[] actionCosts;
@@ -24,7 +23,6 @@ public class Cell {
         visited = false;
         blocked = false;
         onPath = false;
-        expanded = false;
         adj = new Boolean[]{true, true, true, true};//initialize as adjacent cells are not blocked
         priv = null;
         g_value = -1;
@@ -134,14 +132,6 @@ public class Cell {
 
     public void setActionCosts(int index, int value){
         actionCosts[index] = value;
-    }
-
-    public void setExpanded(boolean bool){
-        expanded = bool;
-    }
-
-    public boolean isExpanded(){
-        return expanded;
     }
 
 }

@@ -138,4 +138,5 @@ public class Maze {
     public Cell[][] getMaze(){
         return maze;
     }
+
 }

@@ -14,6 +14,7 @@ public class BinaryHeap {
     public BinaryHeap(boolean preferLarge){
         array = new Cell[20];
         size = 0;
+        this.preferLarge = preferLarge;
     }
 
     public Cell peek(){
@@ -92,6 +93,14 @@ public class BinaryHeap {
             if(array[i].getGValue() > array[j].getGValue() && preferLarge){
                 return -1;
             }
+            //if(array[i].getGValue() == array[j].getGValue()){
+                //Random rand = new Random();
+                //int toReturn = rand.nextInt(3);
+                //while(toReturn -1 == 0){
+                    //toReturn = rand.nextInt(3);
+                //}
+                //return toReturn - 1;
+            //}
             return 1;
         } else if(array[i].getFValue() > array[j].getFValue()){
             return 1;
