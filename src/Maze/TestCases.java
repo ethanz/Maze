@@ -21,24 +21,55 @@ public class TestCases {
     public void run(){
         File compare = new File("CompareResults.txt");
         PrintWriter writer;
-        try{
-            writer = new PrintWriter(compare);
-            writer.println("Start Cell: " + cells[0].getRow() + " " + cells[0].getColumn());
-            writer.println("Goal Cell: " + cells[1].getRow() + " " + cells[1].getColumn());
-            writer.println();
-            runAStar(writer);
-            testTiebreak(writer);
-            testBackward(writer);
-            testAdaptive(writer);
-            writer.close();
-        } catch (FileNotFoundException e){
-            System.out.println("File not found.");
+        int a = 0;
+        int b = 0;
+        int c = 0;
+        int d = 0;
+        int x = 0;
+        int y = 0;
+        int z = 0;
+        int counter = 0;
+        while(counter < 1000){
+            try{
+                maze = new Maze(101);
+                maze.init();
+                search = new RepeatedAStar(maze);
+                cells = this.maze.genStartGoal();
+                writer = new PrintWriter(compare);
+                writer.println("Start Cell: " + cells[0].getRow() + " " + cells[0].getColumn());
+                writer.println("Goal Cell: " + cells[1].getRow() + " " + cells[1].getColumn());
+                writer.println();
+                a = runAStar(writer);
+                b = testTiebreak(writer);
+                c = testBackward(writer);
+                d = testAdaptive(writer);
+                writer.close();
+            } catch (FileNotFoundException e){
+                System.out.println("File not found.");
+            }
+            if(a != 0){
+                if(b < a){
+                    x++;
+                }
+                if(c < a){
+                    y++;
+                }
+                if(d < a){
+                    z++;
+                }
+            }
+            counter++;
         }
+        System.out.println("Small G faster: " + x);
+        System.out.println("Backward faster: " + y);
+        System.out.println("Adaptive faster: " + z);
+        System.out.println();
+        System.out.println();
     }
 
-    public void runAStar(PrintWriter writer){
+    public int runAStar(PrintWriter writer){
         int expanded = search.run(cells, true, true, false);
-        maze.printMaze("RepeatedAStar.txt");
+        //maze.printMaze("RepeatedAStar.txt");
         if(expanded == 0){
             writer.println("Repeated A* cannot reach the target.");
             writer.println();
@@ -47,11 +78,12 @@ public class TestCases {
             writer.println(expanded + " cells expanded.");
             writer.println();
         }
+        return expanded;
     }
 
-    public void testTiebreak(PrintWriter writer){
+    public int testTiebreak(PrintWriter writer){
         int expanded = search.run(cells, false, true, false);
-        maze.printMaze("PreferSmallG.txt");
+        //maze.printMaze("PreferSmallG.txt");
         if(expanded == 0){
             writer.println("Repeated A* by preferring smaller g value cannot reach the target.");
             writer.println();
@@ -60,11 +92,12 @@ public class TestCases {
             writer.println(expanded + " cells expanded.");
             writer.println();
         }
+        return expanded;
     }
 
-    public void testBackward(PrintWriter writer){
+    public int testBackward(PrintWriter writer){
         int expanded = search.run(cells, true, false, false);
-        maze.printMaze("BackwardAStar.txt");
+        //maze.printMaze("BackwardAStar.txt");
         if(expanded == 0){
             writer.println("Backward Repeated A* cannot reach the target.");
             writer.println();
@@ -73,11 +106,12 @@ public class TestCases {
             writer.println(expanded + " cells expanded.");
             writer.println();
         }
+        return expanded;
     }
 
-    public void testAdaptive(PrintWriter writer){
+    public int testAdaptive(PrintWriter writer){
         int expanded = search.run(cells, true, true, true);
-        maze.printMaze("AdaptiveAStar.txt");
+        //maze.printMaze("AdaptiveAStar.txt");
         if(expanded == 0){
             writer.println("Adaptive A* cannot reach the target.");
             writer.println();
@@ -86,5 +120,6 @@ public class TestCases {
             writer.println(expanded + " cells expanded.");
             writer.println();
         }
+        return expanded;
     }
 }

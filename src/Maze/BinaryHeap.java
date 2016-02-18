@@ -10,10 +10,12 @@ public class BinaryHeap {
     private Cell[] array;
     private int size;
     private boolean preferLarge;
+    private int count;
 
     public BinaryHeap(boolean preferLarge){
         array = new Cell[20];
         size = 0;
+        count = 0;
         this.preferLarge = preferLarge;
     }
 
@@ -93,14 +95,16 @@ public class BinaryHeap {
             if(array[i].getGValue() > array[j].getGValue() && preferLarge){
                 return -1;
             }
-            //if(array[i].getGValue() == array[j].getGValue()){
-                //Random rand = new Random();
-                //int toReturn = rand.nextInt(3);
-                //while(toReturn -1 == 0){
-                    //toReturn = rand.nextInt(3);
+            if(array[i].getGValue() < array[j].getGValue() && !preferLarge){
+                return -1;
+            }
+            if(array[i].getGValue() == array[j].getGValue()){
+                //if(count % 2 == 0){
+                    //count++;
+                    return 1;
                 //}
-                //return toReturn - 1;
-            //}
+                //count++;
+            }
             return 1;
         } else if(array[i].getFValue() > array[j].getFValue()){
             return 1;

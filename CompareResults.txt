@@ -1,15 +1,15 @@
-Start Cell: 24 87
-Goal Cell: 72 48
+Start Cell: 34 68
+Goal Cell: 38 36
 
 Repeated A* have reached the target.
-4456 cells expanded.
+1818 cells expanded.
 
 Repeated A* by preferring smaller g value have reached the target.
-3281 cells expanded.
+1419 cells expanded.
 
 Backward Repeated A* have reached the target.
-8794 cells expanded.
+3317 cells expanded.
 
 Adaptive A* have reached the target.
-5132 cells expanded.
+266 cells expanded.
 

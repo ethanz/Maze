@@ -74,7 +74,6 @@ public class RepeatedAStar {
                 }
             }
         }
-        //clearExpanded();
         return expandCount;
     }
 
@@ -118,15 +117,17 @@ public class RepeatedAStar {
             tmp = goalCell.getPriv();
             reversePath.add(goalCell);
             reversePath.add(tmp);
-            while(tmp.getPriv() != currCell){
+            while(tmp != null && tmp.getPriv() != currCell){
                 reversePath.add(tmp.getPriv());
                 tmp = tmp.getPriv();
             }
             for(int i = reversePath.size() - 1; i > 1; i--){
                 currCell = reversePath.get(i);
-                currCell.setOnPath(true);
-                if(reversePath.get(i - 1).isBlocked()){
-                    return i;
+                if(currCell != null){
+                    currCell.setOnPath(true);
+                    if(reversePath.get(i - 1).isBlocked()){
+                        return i;
+                    }
                 }
             }
         } else {
@@ -139,9 +140,11 @@ public class RepeatedAStar {
             }
             for(int i = 0; i < reversePath.size() - 1; i++){
                 currCell = reversePath.get(i);
-                currCell.setOnPath(true);
-                if(reversePath.get(i + 1).isBlocked()){
-                    return i;
+                if(currCell != null){
+                    currCell.setOnPath(true);
+                    if(reversePath.get(i + 1).isBlocked()){
+                        return i;
+                    }
                 }
             }
             reversePath.get(reversePath.size() - 2).setOnPath(true);
@@ -225,18 +228,5 @@ public class RepeatedAStar {
         int h_value = Math.abs(curr.getColumn() - goal.getColumn()) + Math.abs(curr.getRow() - goal.getRow());
         curr.setHVAlue(h_value);
         return curr;
-    }
-
-    private void clearExpanded(){
-        for(int i = 0; i < visited.size(); i++){
-            Cell toClear = visited.get(i);
-            boolean blocked = toClear.isBlocked();
-            int row = toClear.getRow();
-            int col = toClear.getColumn();
-            maze[row][col] = new Cell(row, col, maze.length);
-            if(blocked){
-                maze[row][col].setBlocked(true);
-            }
-        }
     }
 }
