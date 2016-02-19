@@ -44,7 +44,6 @@ public class RepeatedAStar {
         while(!currCell.equals(goalCell.getPriv())){
             counter++;
             heap = new BinaryHeap(preferLarge);
-            currCell = findBlocked(currCell);
 
             goalCell.setSearch(counter);
             currCell.setSearch(counter);
@@ -66,15 +65,30 @@ public class RepeatedAStar {
             }
             int index = traceBack();
             currCell = reversePath.get(index);
+            currCell = findBlocked(currCell);
+            //while(deadEnd(currCell)){
+                //updateNeighbours(currCell);
+                //if(index < reversePath.size() - 1) {
+                    //currCell = reversePath.get(index + 1);
+                //}
+            //}
+        }
+        clearMaze();
+        return expandCount;
+    }
 
-            while(deadEnd(currCell)){
-                updateNeighbours(currCell);
-                if(index < reversePath.size() - 1) {
-                    currCell = reversePath.get(index + 1);
-                }
+    private void clearMaze(){
+        for(int i = 0; i < visited.size(); i++){
+            Cell toReset = visited.get(i);
+            toReset.setOnPath(false);
+            toReset.setPriv(null);
+            toReset.setHVAlue(-1);
+            toReset.setGValue(-1);
+            toReset.setSearch(0);
+            for(int j = 0; j < toReset.getActionCosts().length; j++){
+                toReset.setActionCosts(j, 1);
             }
         }
-        return expandCount;
     }
 
     private boolean deadEnd(Cell cell){
@@ -177,9 +191,6 @@ public class RepeatedAStar {
                             heap.remove(index);
                         }
                         Cell toAdd = setManhattanDistance(next, goal);
-                        if(toAdd == null){
-                            System.out.println("WTF");
-                        }
                         heap.add(toAdd);
                         if(!visited.contains(toAdd)){
                             visited.add(toAdd);
@@ -191,6 +202,7 @@ public class RepeatedAStar {
         if(adaptive){
             for(int i = 0; i < closeList.size(); i++){
                 closeList.get(i).setHVAlue(goal.getGValue() - closeList.get(i).getGValue());
+
             }
         }
     }

@@ -28,7 +28,10 @@ public class TestCases {
         int x = 0;
         int y = 0;
         int z = 0;
+        int e = 0;
+        int notReachable = 0;
         int counter = 0;
+        int equal = 0;
         while(counter < 1000){
             try{
                 maze = new Maze(101);
@@ -40,11 +43,13 @@ public class TestCases {
                 writer.println("Goal Cell: " + cells[1].getRow() + " " + cells[1].getColumn());
                 writer.println();
                 a = runAStar(writer);
+                //e = runAStar(writer);
                 b = testTiebreak(writer);
                 c = testBackward(writer);
                 d = testAdaptive(writer);
+
                 writer.close();
-            } catch (FileNotFoundException e){
+            } catch (FileNotFoundException ex){
                 System.out.println("File not found.");
             }
             if(a != 0){
@@ -54,22 +59,30 @@ public class TestCases {
                 if(c < a){
                     y++;
                 }
-                if(d < a){
+                if(d == a){
                     z++;
                 }
+                if(a == e){
+                    equal++;
+                }
+            }
+            else{
+                notReachable++;
             }
             counter++;
         }
+        System.out.println("Cannot reach target: " + notReachable);
         System.out.println("Small G faster: " + x);
         System.out.println("Backward faster: " + y);
-        System.out.println("Adaptive faster: " + z);
+        System.out.println("Adaptive the same as forward: " + z);
+        //System.out.println("Equal: " + equal);
         System.out.println();
         System.out.println();
     }
 
     public int runAStar(PrintWriter writer){
         int expanded = search.run(cells, true, true, false);
-        //maze.printMaze("RepeatedAStar.txt");
+        maze.printMaze("RepeatedAStar.txt");
         if(expanded == 0){
             writer.println("Repeated A* cannot reach the target.");
             writer.println();
@@ -83,7 +96,7 @@ public class TestCases {
 
     public int testTiebreak(PrintWriter writer){
         int expanded = search.run(cells, false, true, false);
-        //maze.printMaze("PreferSmallG.txt");
+        maze.printMaze("PreferSmallG.txt");
         if(expanded == 0){
             writer.println("Repeated A* by preferring smaller g value cannot reach the target.");
             writer.println();
@@ -97,7 +110,7 @@ public class TestCases {
 
     public int testBackward(PrintWriter writer){
         int expanded = search.run(cells, true, false, false);
-        //maze.printMaze("BackwardAStar.txt");
+        maze.printMaze("BackwardAStar.txt");
         if(expanded == 0){
             writer.println("Backward Repeated A* cannot reach the target.");
             writer.println();
@@ -111,7 +124,7 @@ public class TestCases {
 
     public int testAdaptive(PrintWriter writer){
         int expanded = search.run(cells, true, true, true);
-        //maze.printMaze("AdaptiveAStar.txt");
+        maze.printMaze("AdaptiveAStar.txt");
         if(expanded == 0){
             writer.println("Adaptive A* cannot reach the target.");
             writer.println();
